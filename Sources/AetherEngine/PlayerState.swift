@@ -966,6 +966,18 @@ public struct LoadOptions: Sendable, Equatable {
     /// (`_HLS_msn`) are unaffected.
     public var livePlaylistOmitsFirstSegment: Bool = false
 
+    /// Serve the first item as if a wireless receiver already held the picture: on the device's LAN
+    /// address, with the receiver's playlist choice. Default `false`.
+    ///
+    /// For a host that knows a receiver is about to take the picture: a CarPlay video screen engages
+    /// external playback a moment after the item starts. Without this the engine answers that edge by
+    /// swapping the item onto the LAN address, and a CarPlay screen treats every new item as a new
+    /// video: it switches to the picture, then back to its own screen as the item is replaced (the
+    /// flashes), and after the last swap it stays on Now Playing. Started there, taking the picture is
+    /// no change at all. The device plays its own LAN address as readily as the loopback one. If the
+    /// receiver later lets go, the usual edge returns the session to the loopback.
+    public var startsOnExternalReceiver: Bool = false
+
     /// Whether `play()` may move a behind-live playhead by itself. Default `true`, which is the historical
     /// behaviour (AE#444).
     ///

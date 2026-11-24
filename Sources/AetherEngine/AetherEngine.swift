@@ -7995,6 +7995,17 @@ public final class AetherEngine: ObservableObject {
     /// and won't auto-switch, DrHurt). An SDR master is kept so its subtitle renditions travel (#227).
     /// Loopback native path only; a remote-HLS source is already receiver-reachable, so it's left untouched.
     private(set) var airPlayActive = false
+
+    /// `LoadOptions.startsOnExternalReceiver`: the load serves the receiver's URL from its first item, and
+    /// the receiver's later true edge then finds nothing to change.
+    func presumeExternalReceiverForLoad() {
+        #if os(iOS)
+        guard !airPlayActive else { return }
+        airPlayActive = true
+        EngineLog.emit("[AirPlay] host expects a receiver to take the picture; serving the first item on the "
+                       + "LAN address so its arrival swaps nothing", category: .engine)
+        #endif
+    }
     private var externalPlaybackObservation: NSKeyValueObservation?
 
     /// True when the picture is on something other than this device's own layer: a wireless receiver or

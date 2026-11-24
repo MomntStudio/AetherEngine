@@ -1442,6 +1442,7 @@ extension AetherEngine {
         // the receiver reaches the engine-processed stream (DV/Atmos/subtitles preserved). An HDR/DV master
         // is downgraded to the media playlist there (an SDR receiver rejects it, DrHurt); an SDR master is
         // kept so its subtitle renditions survive the trip (#227). Reverts on the reload when AirPlay ends.
+        if loadedOptions.startsOnExternalReceiver { presumeExternalReceiverForLoad() }
         let served = airPlayAdjustedPlayback(url: playbackURL, session: session)
         playbackURL = served.url
         // Superseded while starting: stop and unwind before touching shared state.
