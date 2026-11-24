@@ -2737,6 +2737,7 @@ public final class HLSVideoEngine: @unchecked Sendable {
             segmentPlacedHandler: segmentPlacedHandler,
             segmentServedHandler: segmentServedHandler
         )
+        prov.livePlaylistOmitsFirstSegment = isLiveSession && livePlaylistOmitsFirstSegment
         self.provider = prov
         // AE#520 round 2: the close reads it on the playlist-build thread, so it is a closure over a
         // mirror rather than a read of the item.
@@ -3023,6 +3024,9 @@ public final class HLSVideoEngine: @unchecked Sendable {
     /// `start()` / `serve(panelIsInHDRMode:)` on an audio switch whose session the display already
     /// refused the HDR master for (`MasterFallbackDecision.audioSwitchKeepsMediaRoute`).
     var keepsMediaPlaylistRoute = false
+
+    /// `LoadOptions.livePlaylistOmitsFirstSegment`, handed to the provider at `start()`.
+    var livePlaylistOmitsFirstSegment = false
 
     /// `true` when the served variant advertises HDR (`VIDEO-RANGE` other than SDR), i.e. the master an
     /// external receiver rejects (#227). Read after `start()`.

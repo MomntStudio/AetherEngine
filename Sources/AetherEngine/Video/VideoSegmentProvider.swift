@@ -1045,6 +1045,8 @@ final class VideoSegmentProvider: HLSSegmentProvider, @unchecked Sendable {
     private var refreshCounter: Int = 0
     /// EXT-X-MEDIA-SEQUENCE first index; monotonically advancing, stays 0 for VOD.
     private var _liveFirstVisible: Int = 0
+    /// `LoadOptions.livePlaylistOmitsFirstSegment`. Set once, before the server serves anything.
+    var livePlaylistOmitsFirstSegment = false
     /// EXT-X-DISCONTINUITY-SEQUENCE: incremented for each discontinuous segment that slides out.
     private var _discontinuitySequence: Int = 0
     /// Rolling EXTINF of the most recent finalized live segments; feeds the observed-cadence
@@ -1476,7 +1478,10 @@ final class VideoSegmentProvider: HLSSegmentProvider, @unchecked Sendable {
             // segments exist, do not advance past 0 so AVPlayer's first
             // read sees all produced segments and can establish a live
             // edge without losing a not-yet-buffered position.
-            let newFirst = max(0, total - window, residentFloor ?? 0)
+            // Segment 0 is left out once a second exists, so the first window already reads as live
+            // (`LoadOptions.livePlaylistOmitsFirstSegment`).
+            let typeFloor = livePlaylistOmitsFirstSegment && total > 1 ? 1 : 0
+            let newFirst = max(typeFloor, total - window, residentFloor ?? 0)
             if newFirst > _liveFirstVisible {
                 // RFC 8216 §6.2.2: EXT-X-DISCONTINUITY-SEQUENCE must increment for each
                 // discontinuity-tagged segment that slides out; segments array is never pruned.

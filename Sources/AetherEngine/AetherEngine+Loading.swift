@@ -1398,6 +1398,7 @@ extension AetherEngine {
         // #93 residual: hand the resume position to the session so the FIRST producer anchors at
         // the matching segment instead of producing seg0 into an immediate teardown.
         session.initialStartSeconds = startPosition
+        session.livePlaylistOmitsFirstSegment = loadedOptions.livePlaylistOmitsFirstSegment
         if keepsMediaPlaylistRoute || loadedOptions.servesMediaPlaylistOnly {
             session.keepsMediaPlaylistRoute = true
             EngineLog.emit(

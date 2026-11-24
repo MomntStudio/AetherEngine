@@ -587,6 +587,7 @@ enum SessionOptionCorrection {
         "dvrWindowSeconds",
         "softwareDVRRetention", "liveDVRByteBudget",
         "liveBlockingReload", "liveJoinProfile", "sourceOpenPolicy", "liveStartupGraceSeconds", "liveStartupSingleSegmentMinimumSeconds", "liveEdgeCushionSeconds", "liveJoinStartsImmediately", "liveJoinsAtPlaylistStart",
+        "servesMediaPlaylistOnly", "livePlaylistOmitsFirstSegment",
         "clampsLiveResumeToWindow", "nativeRemoteHLS", "nativeRemoteHLSIngestFallback", "nativeRemoteHLSReadinessBudgetSeconds",
         "preserveASSMarkup", "prepareNativeSubtitles", "recognizesBitmapSubtitleText", "eagerNativeSubtitleReaders", "nativeAudioTrackMenu", "serveIFramePlaylist", "generatesBackgroundScrubPreviews", "confirmAtmos",
         "nativeSubtitlePreferredLanguages", "sequentialOrigin", "maxConcurrentSourceRequests", "heldSourceConnection",

@@ -55,6 +55,24 @@ final class LiveWindowObservedCadenceTests: XCTestCase {
         XCTAssertEqual(provider.notePlaylistBuild().firstVisible, 0)
     }
 
+    /// `LoadOptions.livePlaylistOmitsFirstSegment`: the first window already says "live" (sequence past
+    /// 0), where an unslid window reads like an EVENT playlist and an AirPlay video handoff waits.
+    func testOmittingTheFirstSegmentStartsTheSequenceAtOne() {
+        let provider = makeFastZapProvider()
+        provider.livePlaylistOmitsFirstSegment = true
+        provider.appendLiveSegment(index: 0, startSeconds: 0, durationSeconds: 2.0)
+        XCTAssertEqual(provider.notePlaylistBuild().firstVisible, 0, "a lone segment is still served")
+        for i in 1..<10 {
+            provider.appendLiveSegment(index: i, startSeconds: Double(i) * 2.0, durationSeconds: 2.0)
+        }
+        XCTAssertEqual(provider.notePlaylistBuild().firstVisible, 1)
+        // Once the window slides on its own, the floor changes nothing.
+        for i in 10..<35 {
+            provider.appendLiveSegment(index: i, startSeconds: Double(i) * 2.0, durationSeconds: 2.0)
+        }
+        XCTAssertEqual(provider.notePlaylistBuild().firstVisible, 5)
+    }
+
     // MARK: - Blocking-reload hold bound
 
     func testBlockingReloadHoldIsThreeSealedTargetDurations() {

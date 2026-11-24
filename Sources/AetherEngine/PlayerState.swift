@@ -952,6 +952,20 @@ public struct LoadOptions: Sendable, Equatable {
     /// and no HDR/DV signalling.
     public var servesMediaPlaylistOnly: Bool = false
 
+    /// Never serve a loopback live media playlist that begins at `EXT-X-MEDIA-SEQUENCE:0`: the first
+    /// segment is left out of every window. Default `false`.
+    ///
+    /// A sliding live playlist carries no `EXT-X-PLAYLIST-TYPE`, and until its first segment slides
+    /// out it reads exactly like an EVENT playlist that has not grown yet. An AirPlay video handoff
+    /// will not start on an asset whose type it cannot tell: mediaplaybackd logs "Type of playlist
+    /// cannot be determined between Live or Event", then "Asset type pending with deferred APV", and
+    /// waits, having already suspended the receiver's audio. Measured with a CarPlay video screen:
+    /// no picture and no sound until the window first slid, by which time the car had shown its Now
+    /// Playing screen. A sequence that does not start at 0 says segments were removed, which an EVENT
+    /// playlist never does. Sequence numbers stay the segment indices, so blocking reloads
+    /// (`_HLS_msn`) are unaffected.
+    public var livePlaylistOmitsFirstSegment: Bool = false
+
     /// Whether `play()` may move a behind-live playhead by itself. Default `true`, which is the historical
     /// behaviour (AE#444).
     ///
