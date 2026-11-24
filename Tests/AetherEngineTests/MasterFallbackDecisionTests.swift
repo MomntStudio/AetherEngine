@@ -33,6 +33,14 @@ struct MasterFallbackDecisionTests {
         #expect(MasterFallbackDecision.isDisplayRejectionCode(-11848))
         #expect(!MasterFallbackDecision.isDisplayRejectionCode(-12889)) // media timeout
         #expect(!MasterFallbackDecision.isDisplayRejectionCode(-11800)) // generic unknown
+        // A receiver refusing the master on an external-playback hop (CarPlay): the media playlist,
+        // never a panel latch.
+        #expect(MasterFallbackDecision.isMasterRejectionCode(-11870))
+        #expect(!MasterFallbackDecision.isDisplayRejectionCode(-11870))
+        #expect(MasterFallbackDecision.shouldFallBackToMediaPlaylist(
+            errorCode: -11870, servingMasterPlaylist: true, alreadyFellBack: false))
+        #expect(!MasterFallbackDecision.shouldFallBackToMediaPlaylist(
+            errorCode: -11870, servingMasterPlaylist: true, alreadyFellBack: true))
         #expect(!MasterFallbackDecision.isDisplayRejectionCode(0))
     }
 

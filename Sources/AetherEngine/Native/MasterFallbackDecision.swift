@@ -75,8 +75,14 @@ enum MasterFallbackDecision {
     /// media.m3u8 never requested). -1002 is only classified here, behind the startup path's
     /// `servingMasterPlaylist` gate: the failed URL is then the engine's own loopback master, whose
     /// GETs the server demonstrably answered, so the code cannot mean a genuinely bad host URL.
+    ///
+    /// `-11870` (AVErrorExternalPlaybackNotSupportedForAsset) is a receiver refusing the master on an
+    /// external-playback hop: a CarPlay video screen fails a live loopback master with it about a second
+    /// after reading it (underlying OSStatus -60034) and never asks for a segment. It is not a display
+    /// rejection, so it latches nothing about the panel; it only earns the item its media playlist,
+    /// which on a live session is the LAN rejoin at the edge `fallBackToMediaPlaylist` already does.
     static func isMasterRejectionCode(_ code: Int) -> Bool {
-        isDisplayRejectionCode(code) || code == -1002
+        isDisplayRejectionCode(code) || code == -1002 || code == -11870
     }
 
     /// A malformed media playlist can be wrapped in the same -11848 as a display refusal.
