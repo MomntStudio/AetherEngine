@@ -1398,7 +1398,7 @@ extension AetherEngine {
         // #93 residual: hand the resume position to the session so the FIRST producer anchors at
         // the matching segment instead of producing seg0 into an immediate teardown.
         session.initialStartSeconds = startPosition
-        if keepsMediaPlaylistRoute {
+        if keepsMediaPlaylistRoute || loadedOptions.servesMediaPlaylistOnly {
             session.keepsMediaPlaylistRoute = true
             EngineLog.emit(
                 "[AetherEngine] #849 audio switch keeps the media playlist: the display refused this "

@@ -941,6 +941,17 @@ public struct LoadOptions: Sendable, Equatable {
     /// discontinuity. Ignored for VOD.
     public var liveJoinsAtPlaylistStart: Bool = false
 
+    /// Serve the loopback media playlist and never a master, whatever the routing would choose.
+    /// Default `false`.
+    ///
+    /// For a host that knows its receiver refuses the master. A CarPlay video screen fails a live
+    /// loopback master with `-11870` about a second after reading it; the master fallback recovers,
+    /// but only after that refusal and a second item, and the car picks its screen in the meantime.
+    /// Served media-direct, the first item is the one that plays. Costs what a media-direct route
+    /// always costs: no subtitle, audio-language or I-frame renditions (they live only in a master),
+    /// and no HDR/DV signalling.
+    public var servesMediaPlaylistOnly: Bool = false
+
     /// Whether `play()` may move a behind-live playhead by itself. Default `true`, which is the historical
     /// behaviour (AE#444).
     ///
